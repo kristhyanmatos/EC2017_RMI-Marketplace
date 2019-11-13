@@ -12,9 +12,26 @@ import java.io.Serializable;
  * @author krist
  */
 public class Produto implements Serializable {
-    private String nome, loja;
+    private int id;
+    private String nome, loja, data;
     private double price;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+    
     public String getNome() {
         return nome;
     }
