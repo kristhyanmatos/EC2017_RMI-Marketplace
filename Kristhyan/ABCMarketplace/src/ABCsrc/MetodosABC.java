@@ -24,8 +24,9 @@ public class MetodosABC implements InterfaceABC {
     }
     @Override
     public List<Produto> buscar(String nome) throws RemoteException {
-       return  ctrlProduto.buscar(nome, conexaoSQL);
-       
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       //return  ctrlProduto.buscar(nome, conexaoSQL);
+       //função que  buscará em outros servidores os produtos
     }
 
     @Override
