@@ -14,8 +14,16 @@ import java.io.Serializable;
 public class Produto implements Serializable {
     private int id;
     private String nome, loja, data;
-    private double price;
+    private double price, unidades;
 
+    public double getUnidades() {
+        return unidades;
+    }
+
+    public void setUnidades(double unidades) {
+        this.unidades = unidades;
+    }
+    
     public int getId() {
         return id;
     }

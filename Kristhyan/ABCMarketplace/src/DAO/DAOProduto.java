@@ -22,14 +22,15 @@ import model.Produto;
  */
 public class DAOProduto {
     public int inserir(Produto p, ConexaoSQL conexao){
-        String sql = "INSERT INTO Produto(Nome, Preco, Data, Loja) VALUES(?,?,?)";
+        String sql = "INSERT INTO Produto(Nome, Preco, Data, Loja, Unidades) VALUES(?,?,?,?,?)";
         PreparedStatement pstmt = conexao.criarPreparedStatement(sql);
         
         try {
-            pstmt.setString(0, p.getNome());
-            pstmt.setDouble(1, p.getPrice());
-            pstmt.setString(2, p.getData());
-            pstmt.setString(3, p.getLoja());
+            pstmt.setString(1, p.getNome());
+            pstmt.setDouble(2, p.getPrice());
+            pstmt.setString(3, p.getData());
+            pstmt.setString(4, p.getLoja());
+            pstmt.setDouble(5, p.getUnidades());
             return pstmt.executeUpdate();
             
         } catch (SQLException ex) {
@@ -53,7 +54,8 @@ public class DAOProduto {
                 + "p.Nome, "
                 + "p.Preco, "
                 + "p.Data, "
-                + "p.Loja "
+                + "p.Loja, "
+                + "p.Unidades "
                 + "FROM Produto p "
                 + "ORDER BY p.Preco";
         stmt = conexao.criarStatement();
@@ -67,6 +69,7 @@ public class DAOProduto {
                 p.setPrice(resultSet.getDouble("Preco"));
                 p.setData(resultSet.getString("Data"));
                 p.setLoja(resultSet.getString("Loja"));
+                p.setUnidades(resultSet.getDouble("Unidades"));
                 produtos.add(p);
             }
         }catch(SQLException e){
