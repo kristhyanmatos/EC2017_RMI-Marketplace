@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package client;
 
 /**
  *
  * @author kristhyanmatos
  */
 public class Loja {
-    private int id, porta;
-    private String nome, ip, mi;
+    private int id;
+    private String nome, url;
     
     public int getId() {
         return id;
@@ -29,28 +29,12 @@ public class Loja {
         this.nome = nome;
     }
 
-    public int getPorta() {
-        return porta;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPorta(int porta) {
-        this.porta = porta;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getMi() {
-        return mi;
-    }
-
-    public void setMi(String mi) {
-        this.mi = mi;
+    public void setUrl(String url) {
+        this.url = url;
     }
     
 }

@@ -9,10 +9,12 @@ import conexao.ConexaoSQL;
 import controle.CtrlExtrato;
 import controle.CtrlLoja;
 import controle.CtrlProduto;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +29,7 @@ import model.Produto;
  *
  * @author krist
  */
-public class MetodosABC implements InterfaceABC {
+public class MetodosABC extends UnicastRemoteObject implements InterfaceABC {
     CtrlProduto ctrlProduto = new CtrlProduto();
     CtrlLoja ctrlLoja = new CtrlLoja();
     CtrlExtrato ctrlExtrato = new CtrlExtrato();
@@ -35,7 +37,8 @@ public class MetodosABC implements InterfaceABC {
     Date data = new Date();
     SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
     String dataAtual = dataFormatada.format(data);
-    public MetodosABC(){
+    public MetodosABC() throws RemoteException{
+        super();
         conexaoSQL.conectar();
     }
     @Override
@@ -43,20 +46,21 @@ public class MetodosABC implements InterfaceABC {
        //return  ctrlProduto.buscar(nome, conexaoSQL);
        //função que  buscará em outros servidores os produtos
        List<Produto> produtosFound = new ArrayList<>();
-        try {
-            for(Loja l: ctrlLoja.buscar(conexaoSQL)){
-                InterfaceABC stub = (InterfaceABC) Naming.lookup("rmi://"+l.getUrl());
+       for(Loja l: ctrlLoja.buscar(conexaoSQL)){
+           try {
+               Registry miRegistry = LocateRegistry.getRegistry(l.getIp(), l.getPorta());
+                InterfaceABC stub = (InterfaceABC) miRegistry.lookup(l.getMi());
+               
                 List<Produto> buscaProdutoStub = stub.buscar(nome);
                 if(buscaProdutoStub!=null)
                     buscaProdutoStub.stream().forEach((p) -> {
                         produtosFound.add(p);
                     });
-            }
-            return produtosFound;
-        } catch (NotBoundException | MalformedURLException ex) {
-            Logger.getLogger(MetodosABC.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+           } catch (NotBoundException | AccessException ex) {
+               Logger.getLogger(MetodosABC.class.getName()).log(Level.SEVERE, null, ex);
+           }
+       }
+        return produtosFound;
     }
 
     @Override
@@ -70,12 +74,13 @@ public class MetodosABC implements InterfaceABC {
                 extrato.setNome(produto.getNome());
                 extrato.setData(dataAtual);
                 extrato.setPrice(produto.getPrice()*taxa);
-                InterfaceABC stub = (InterfaceABC) Naming.lookup("rmi://"+l.getUrl());
+                Registry miRegistry = LocateRegistry.getRegistry(l.getIp(),l.getPorta());
+                InterfaceABC stub = (InterfaceABC) miRegistry.lookup(l.getMi());
                 r = stub.comprar(produto);
                 ctrlExtrato.inserir(extrato, conexaoSQL);
              }
          }
-         } catch (NotBoundException | MalformedURLException ex) {
+         } catch (NotBoundException ex) {
             Logger.getLogger(MetodosABC.class.getName()).log(Level.SEVERE, null, ex);
            return false;
         }

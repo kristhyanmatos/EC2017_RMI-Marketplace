@@ -22,12 +22,14 @@ import model.Loja;
  */
 public class DAOLoja {
     public int inserir(Loja l, ConexaoSQL conexao){
-        String sql = "INSERT INTO Loja (Nome, Url) VALUES(?,?)";
+        String sql = "INSERT INTO Loja (Nome, Ip, Porta, Mi) VALUES(?,?,?,?)";
         PreparedStatement pstmt = conexao.criarPreparedStatement(sql);
         
         try {
             pstmt.setString(1, l.getNome());
-            pstmt.setString(2, l.getUrl());
+            pstmt.setString(2, l.getIp());
+            pstmt.setInt(3, l.getPorta());
+            pstmt.setString(4, l.getMi());
             return pstmt.executeUpdate();
             
         } catch (SQLException ex) {
@@ -49,7 +51,9 @@ public class DAOLoja {
         Statement stmt = null;
         String query = "SELECT l.Id, "
                 + "l.Nome, "
-                + "l.Url "
+                + "l.Ip, "
+                + "l.Porta, "
+                + "l.Mi "
                 + "FROM Loja l";
         stmt = conexao.criarStatement();
         
@@ -58,7 +62,9 @@ public class DAOLoja {
             while(resultSet.next()){
                 Loja l = new Loja();
                 l.setNome(resultSet.getString("Nome"));
-                l.setUrl(resultSet.getString("Url"));
+                l.setIp(resultSet.getString("Ip"));
+                l.setPorta(resultSet.getInt("porta"));
+                l.setMi(resultSet.getString("Mi"));
                 lojas.add(l);
             }
         }catch(SQLException e){

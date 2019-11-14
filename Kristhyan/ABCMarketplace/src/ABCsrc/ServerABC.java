@@ -5,10 +5,9 @@
  */
 package ABCsrc;
 
-import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +16,13 @@ import java.util.logging.Logger;
  * @author krist
  */
 public class ServerABC {
-    public static void main(String[] args) {
-        InterfaceABC stub = new MetodosABC();
+    public static void main(String[] args){
         try {
-            Naming.bind("rmi://localhost:5001/serverABC", stub);
-        } catch (AlreadyBoundException | MalformedURLException | RemoteException ex) {
+            InterfaceABC stub = new MetodosABC();
+            Registry miRegistry = LocateRegistry.createRegistry(1234);
+            miRegistry.rebind("marketplaceABC",stub);
+            System.out.println("Servidor ligado!");
+        } catch (RemoteException ex) {
             Logger.getLogger(ServerABC.class.getName()).log(Level.SEVERE, null, ex);
         }
         

@@ -3,16 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package client;
+
+import java.io.Serializable;
 
 /**
  *
- * @author kristhyanmatos
+ * @author krist
  */
-public class Loja {
-    private int id, porta;
-    private String nome, ip, mi;
-    
+public class Extrato implements Serializable{
+    private int id;
+    private String nome, data;
+    private double price;
+
     public int getId() {
         return id;
     }
@@ -20,7 +23,7 @@ public class Loja {
     public void setId(int id) {
         this.id = id;
     }
-
+    
     public String getNome() {
         return nome;
     }
@@ -29,28 +32,21 @@ public class Loja {
         this.nome = nome;
     }
 
-    public int getPorta() {
-        return porta;
+    public String getData() {
+        return data;
     }
 
-    public void setPorta(int porta) {
-        this.porta = porta;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public String getIp() {
-        return ip;
+    public double getPrice() {
+        return price;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public String getMi() {
-        return mi;
-    }
-
-    public void setMi(String mi) {
-        this.mi = mi;
-    }
     
 }
