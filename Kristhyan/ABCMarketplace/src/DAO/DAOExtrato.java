@@ -14,23 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Produto;
-
+import model.Extrato;
 /**
  *
  * @author kristhyanmatos
  */
-public class DAOProduto {
-    public int inserir(Produto p, ConexaoSQL conexao){
-        String sql = "INSERT INTO Produto(Nome, Preco, Data, Loja, Unidades) VALUES(?,?,?,?,?)";
+public class DAOExtrato {
+    public int inserir(Extrato e, ConexaoSQL conexao){
+        String sql = "INSERT INTO Extrato(Nome, Data, Preco) VALUES(?,?,?)";
         PreparedStatement pstmt = conexao.criarPreparedStatement(sql);
         
         try {
-            pstmt.setString(1, p.getNome());
-            pstmt.setDouble(2, p.getPrice());
-            pstmt.setString(3, p.getData());
-            pstmt.setString(4, p.getLoja());
-            pstmt.setDouble(5, p.getUnidades());
+            pstmt.setString(1, e.getNome());
+            pstmt.setString(2, e.getData());
+            pstmt.setDouble(3, e.getPrice());
             return pstmt.executeUpdate();
             
         } catch (SQLException ex) {
@@ -38,40 +35,34 @@ public class DAOProduto {
             return 0;
         }finally{
             if(pstmt!=null){
-                try{
+                try {
                     pstmt.close();
-                }catch(SQLException e){
-                    java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAOExtrato.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public List<Produto> buscar(String nome, ConexaoSQL conexao){
-        List<Produto> produtos = new ArrayList<>();
+    public List<Extrato> buscar(ConexaoSQL conexao){
+        List<Extrato> extratos = new ArrayList<>();
         ResultSet resultSet = null;
         Statement stmt = null;
-        String query = "SELECT p.Id, "
-                + "p.Nome, "
-                + "p.Preco, "
-                + "p.Data, "
-                + "p.Loja, "
-                + "p.Unidades "
-                + "FROM Produto p "
-                + "WHERE p.Nome LIKE '"+nome+"%' "
-                + "ORDER BY p.Preco";
+        String query = "SELECT e.Id, "
+                + "e.Nome, "
+                + "e.Data, "
+                + "e.Preco "
+                + "FROM Extrato e ";
         stmt = conexao.criarStatement();
         
         try{
             resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
-                Produto p = new Produto();
-                p.setId(resultSet.getInt("Id"));
-                p.setNome(resultSet.getString("Nome"));
-                p.setPrice(resultSet.getDouble("Preco"));
-                p.setData(resultSet.getString("Data"));
-                p.setLoja(resultSet.getString("Loja"));
-                p.setUnidades(resultSet.getDouble("Unidades"));
-                produtos.add(p);
+                Extrato e = new Extrato();
+                e.setId(resultSet.getInt("Id"));
+                e.setNome(resultSet.getString("Nome"));
+                e.setData(resultSet.getString("Data"));
+                e.setPrice(resultSet.getDouble("Preco"));
+                extratos.add(e);
             }
         }catch(SQLException e){
             java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
@@ -84,6 +75,6 @@ public class DAOProduto {
                 java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
             }
         }
-        return produtos;
+        return extratos;
     }
 }

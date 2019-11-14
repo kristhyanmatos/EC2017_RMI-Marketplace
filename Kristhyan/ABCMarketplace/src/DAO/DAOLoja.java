@@ -14,23 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Produto;
+import model.Loja;
 
 /**
  *
  * @author kristhyanmatos
  */
-public class DAOProduto {
-    public int inserir(Produto p, ConexaoSQL conexao){
-        String sql = "INSERT INTO Produto(Nome, Preco, Data, Loja, Unidades) VALUES(?,?,?,?,?)";
+public class DAOLoja {
+    public int inserir(Loja l, ConexaoSQL conexao){
+        String sql = "INSERT INTO Loja (Nome, Url) VALUES(?,?)";
         PreparedStatement pstmt = conexao.criarPreparedStatement(sql);
         
         try {
-            pstmt.setString(1, p.getNome());
-            pstmt.setDouble(2, p.getPrice());
-            pstmt.setString(3, p.getData());
-            pstmt.setString(4, p.getLoja());
-            pstmt.setDouble(5, p.getUnidades());
+            pstmt.setString(1, l.getNome());
+            pstmt.setString(2, l.getUrl());
             return pstmt.executeUpdate();
             
         } catch (SQLException ex) {
@@ -46,32 +43,23 @@ public class DAOProduto {
             }
         }
     }
-    public List<Produto> buscar(String nome, ConexaoSQL conexao){
-        List<Produto> produtos = new ArrayList<>();
+    public List<Loja> buscar(ConexaoSQL conexao){
+        List<Loja> lojas = new ArrayList<>();
         ResultSet resultSet = null;
         Statement stmt = null;
-        String query = "SELECT p.Id, "
-                + "p.Nome, "
-                + "p.Preco, "
-                + "p.Data, "
-                + "p.Loja, "
-                + "p.Unidades "
-                + "FROM Produto p "
-                + "WHERE p.Nome LIKE '"+nome+"%' "
-                + "ORDER BY p.Preco";
+        String query = "SELECT l.Id, "
+                + "l.Nome, "
+                + "l.Url "
+                + "FROM Loja l";
         stmt = conexao.criarStatement();
         
         try{
             resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
-                Produto p = new Produto();
-                p.setId(resultSet.getInt("Id"));
-                p.setNome(resultSet.getString("Nome"));
-                p.setPrice(resultSet.getDouble("Preco"));
-                p.setData(resultSet.getString("Data"));
-                p.setLoja(resultSet.getString("Loja"));
-                p.setUnidades(resultSet.getDouble("Unidades"));
-                produtos.add(p);
+                Loja l = new Loja();
+                l.setNome(resultSet.getString("Nome"));
+                l.setUrl(resultSet.getString("Url"));
+                lojas.add(l);
             }
         }catch(SQLException e){
             java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
@@ -84,6 +72,6 @@ public class DAOProduto {
                 java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
             }
         }
-        return produtos;
+        return lojas;
     }
 }

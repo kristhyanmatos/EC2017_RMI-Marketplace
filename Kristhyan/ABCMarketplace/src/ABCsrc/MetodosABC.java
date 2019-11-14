@@ -6,16 +6,21 @@
 package ABCsrc;
 
 import conexao.ConexaoSQL;
+import controle.CtrlExtrato;
+import controle.CtrlLoja;
 import controle.CtrlProduto;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Extrato;
+import model.Loja;
 import model.Produto;
 
 /**
@@ -24,7 +29,12 @@ import model.Produto;
  */
 public class MetodosABC implements InterfaceABC {
     CtrlProduto ctrlProduto = new CtrlProduto();
+    CtrlLoja ctrlLoja = new CtrlLoja();
+    CtrlExtrato ctrlExtrato = new CtrlExtrato();
     ConexaoSQL conexaoSQL = new ConexaoSQL();
+    Date data = new Date();
+    SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
+    String dataAtual = dataFormatada.format(data);
     public MetodosABC(){
         conexaoSQL.conectar();
     }
@@ -34,42 +44,14 @@ public class MetodosABC implements InterfaceABC {
        //função que  buscará em outros servidores os produtos
        List<Produto> produtosFound = new ArrayList<>();
         try {
-            InterfaceABC stub1 = (InterfaceABC) Naming.lookup("rmi://ip:porta/buscaProdutos");
-            /*InterfaceABC stub2 = (InterfaceABC) Naming.lookup("rmi://ip:porta/buscaProdutos");
-            InterfaceABC stub3 = (InterfaceABC) Naming.lookup("rmi://ip:porta/buscaProdutos");
-            InterfaceABC stub4 = (InterfaceABC) Naming.lookup("rmi://ip:porta/buscaProdutos");
-            InterfaceABC stub5 = (InterfaceABC) Naming.lookup("rmi://ip:porta/buscaProdutos");
-            InterfaceABC stub6 = (InterfaceABC) Naming.lookup("rmi://ip:porta/buscaProdutos");*/
-            List<Produto> buscaProdutoStub1 = stub1.buscar(nome);
-            if(buscaProdutoStub1!=null)
-                buscaProdutoStub1.stream().forEach((p) -> {
-                    produtosFound.add(p);
-                });
-            /*List<Produto> buscaProdutoStub2 = stub2.buscar(nome);
-            if(buscaProdutoStub2!=null)
-                buscaProdutoStub2.stream().forEach((p) -> {
-                    produtosFound.add(p);
-                });
-            List<Produto> buscaProdutoStub3 = stub3.buscar(nome);
-            if(buscaProdutoStub3!=null)
-                buscaProdutoStub3.stream().forEach((p) -> {
-                    produtosFound.add(p);
-                });
-            List<Produto> buscaProdutoStub4 = stub4.buscar(nome);
-            if(buscaProdutoStub4!=null)
-                buscaProdutoStub4.stream().forEach((p) -> {
-                    produtosFound.add(p);
-                });
-            List<Produto> buscaProdutoStub5 = stub5.buscar(nome);
-            if(buscaProdutoStub5!=null)
-                buscaProdutoStub5.stream().forEach((p) -> {
-                    produtosFound.add(p);
-                });
-            List<Produto> buscaProdutoStub6 = stub6.buscar(nome);
-            if(buscaProdutoStub6!=null)
-                buscaProdutoStub6.stream().forEach((p) -> {
-                    produtosFound.add(p);
-                });*/
+            for(Loja l: ctrlLoja.buscar(conexaoSQL)){
+                InterfaceABC stub = (InterfaceABC) Naming.lookup("rmi://"+l.getUrl());
+                List<Produto> buscaProdutoStub = stub.buscar(nome);
+                if(buscaProdutoStub!=null)
+                    buscaProdutoStub.stream().forEach((p) -> {
+                        produtosFound.add(p);
+                    });
+            }
             return produtosFound;
         } catch (NotBoundException | MalformedURLException ex) {
             Logger.getLogger(MetodosABC.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,12 +61,30 @@ public class MetodosABC implements InterfaceABC {
 
     @Override
     public boolean comprar(Produto produto) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Extrato extrato = new Extrato();
+        double taxa = 0.12;
+        boolean r = false;
+        try {
+        for(Loja l: ctrlLoja.buscar(conexaoSQL)){
+             if(l.getNome().equals(produto.getLoja())){
+                extrato.setNome(produto.getNome());
+                extrato.setData(dataAtual);
+                extrato.setPrice(produto.getPrice()*taxa);
+                InterfaceABC stub = (InterfaceABC) Naming.lookup("rmi://"+l.getUrl());
+                r = stub.comprar(produto);
+                ctrlExtrato.inserir(extrato, conexaoSQL);
+             }
+         }
+         } catch (NotBoundException | MalformedURLException ex) {
+            Logger.getLogger(MetodosABC.class.getName()).log(Level.SEVERE, null, ex);
+           return false;
+        }
+        return r; 
     }
 
     @Override
     public List<Extrato> extrato() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ctrlExtrato.buscar(conexaoSQL);
     }
     
 }

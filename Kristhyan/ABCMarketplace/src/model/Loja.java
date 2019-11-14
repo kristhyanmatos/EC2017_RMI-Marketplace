@@ -5,17 +5,14 @@
  */
 package model;
 
-import java.io.Serializable;
-
 /**
  *
- * @author krist
+ * @author kristhyanmatos
  */
-public class Extrato implements Serializable{
+public class Loja {
     private int id;
-    private String nome, data;
-    private double price;
-
+    private String nome, url;
+    
     public int getId() {
         return id;
     }
@@ -23,7 +20,7 @@ public class Extrato implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getNome() {
         return nome;
     }
@@ -32,21 +29,12 @@ public class Extrato implements Serializable{
         this.nome = nome;
     }
 
-    public String getData() {
-        return data;
+    public String getUrl() {
+        return url;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setUrl(String url) {
+        this.url = url;
     }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     
 }
