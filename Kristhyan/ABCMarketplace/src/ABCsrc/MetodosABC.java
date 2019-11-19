@@ -46,7 +46,7 @@ public class MetodosABC extends UnicastRemoteObject implements InterfaceABC {
        List<Produto> produtosFound = new ArrayList<>();
        for(Loja l: ctrlLoja.buscar(conexaoSQL)){
            try {
-               Registry miRegistry = LocateRegistry.getRegistry(l.getIp(), l.getPorta());
+                Registry miRegistry = LocateRegistry.getRegistry(l.getIp(), l.getPorta());
                 InterfaceABC stub = (InterfaceABC) miRegistry.lookup(l.getMi());
                
                 List<Produto> buscaProdutoStub = stub.buscar(nome);

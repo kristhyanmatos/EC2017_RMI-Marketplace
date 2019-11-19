@@ -5,6 +5,7 @@
  */
 package server;
 
+import ABCsrc.InterfaceABC;
 import conexao.ConexaoSQL;
 import controle.CtrlExtrato;
 import controle.CtrlProduto;
@@ -20,7 +21,7 @@ import model.Produto;
  *
  * @author krist
  */
-public class MetodosBinha extends UnicastRemoteObject implements InterfaceBinha {
+public class MetodosBinha extends UnicastRemoteObject implements InterfaceABC {
     CtrlExtrato ctrlExtrato = new CtrlExtrato();
     CtrlProduto ctrlProduto = new CtrlProduto();
     ConexaoSQL conexaoSQL = new ConexaoSQL();

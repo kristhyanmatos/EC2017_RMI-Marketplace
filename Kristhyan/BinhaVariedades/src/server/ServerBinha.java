@@ -5,6 +5,7 @@
  */
 package server;
 
+import ABCsrc.InterfaceABC;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,8 +18,10 @@ import java.util.logging.Logger;
  */
 public class ServerBinha {
     public static void main(String[] args) {
+        System.setProperty("java.security.policy", "security.txt");
+        System.setSecurityManager(new SecurityManager());
         try{    
-            InterfaceBinha stub = new MetodosBinha();
+            InterfaceABC stub = new MetodosBinha();
             Registry miRegistry = LocateRegistry.createRegistry(1222);
             miRegistry.rebind("BinhaVariedades",stub);
             System.out.println("Servidor binha atendendo!");
