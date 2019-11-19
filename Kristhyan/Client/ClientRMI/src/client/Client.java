@@ -18,12 +18,14 @@ import java.util.logging.Logger;
  * @author kristhyanmatos
  */
 public class Client {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NotBoundException {
         
         try {
+            System.setProperty("java.security.policy", "security.txt");
+            System.setSecurityManager(new SecurityManager());
             
             Registry miRegistry = LocateRegistry.getRegistry("127.0.0.1", 1234);
-            InterfaceABC stub = (InterfaceABC) miRegistry.lookup("marketplaceABC");
+            InterfaceABC stub =  (InterfaceABC) miRegistry.lookup("marketplaceABC");
             //List<Produto> found = stub.buscar("Manteiga");
             //for(Produto p: found){
               //  System.out.println("nome: " + p.getNome());
@@ -34,7 +36,7 @@ public class Client {
             System.out.println("olá, está indo tudo muito bem!");
             
            
-        } catch (RemoteException | NotBoundException ex) {
+        } catch (RemoteException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         if(System.getSecurityManager()==null)

@@ -16,8 +16,10 @@ import java.util.logging.Logger;
  * @author krist
  */
 public class ServerABC {
-    public static void main(String[] args){   
-    
+    public static void main(String[] args){
+        System.setProperty("java.security.policy", "security.txt");
+        System.setSecurityManager(new SecurityManager());
+        
         try {
             InterfaceABC stub = new MetodosABC();
             Registry miRegistry = LocateRegistry.createRegistry(1234);
