@@ -31,7 +31,7 @@ public class DAOExtrato {
             return pstmt.executeUpdate();
             
         } catch (SQLException ex) {
-            Logger.getLogger(DAOExtrato.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }finally{
             if(pstmt!=null){
@@ -65,14 +65,14 @@ public class DAOExtrato {
                 extratos.add(e);
             }
         }catch(SQLException e){
-            java.util.logging.Logger.getLogger(DAOExtrato.class.getName()).log(Level.SEVERE, null, e);
+            java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
             return null;
         }finally{
             try{
                 resultSet.close();
                 stmt.close();
             }catch(SQLException e){
-                java.util.logging.Logger.getLogger(DAOExtrato.class.getName()).log(Level.SEVERE, null, e);
+                java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
             }
         }
         return extratos;

@@ -21,4 +21,7 @@ public class CtrlProduto {
     public List<Produto> buscar(String nome, ConexaoSQL conexao){
         return new DAOProduto().buscar(nome, conexao);
     }
+    public int atualizar(Double quantidade, int id, ConexaoSQL conexao){
+        return new DAOProduto().atualizar(quantidade, id, conexao);
+    }
 }

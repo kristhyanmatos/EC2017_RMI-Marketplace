@@ -86,4 +86,26 @@ public class DAOProduto {
         }
         return produtos;
     }
+    public int atualizar(Double quantidade, int id, ConexaoSQL conexao){
+        PreparedStatement pstmt = null;
+        String sql = "UPDATE Produto SET Unidades = ? WHERE Id = ?";
+        
+        try{
+           pstmt = conexao.criarPreparedStatement(sql);
+           pstmt.setDouble(1,quantidade);
+           pstmt.setInt(2, id);
+           
+           return pstmt.executeUpdate();
+           
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+            return 0;
+        }finally{
+            try{
+                pstmt.close();
+            }catch(SQLException e){
+                System.err.println(e.getMessage());
+            }
+        }
+    }
 }

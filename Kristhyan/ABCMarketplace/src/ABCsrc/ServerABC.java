@@ -16,7 +16,8 @@ import java.util.logging.Logger;
  * @author krist
  */
 public class ServerABC {
-    public static void main(String[] args){
+    public static void main(String[] args){   
+    
         try {
             InterfaceABC stub = new MetodosABC();
             Registry miRegistry = LocateRegistry.createRegistry(1234);
@@ -25,6 +26,5 @@ public class ServerABC {
         } catch (RemoteException ex) {
             Logger.getLogger(ServerABC.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 }

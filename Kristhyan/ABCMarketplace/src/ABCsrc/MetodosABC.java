@@ -8,7 +8,6 @@ package ABCsrc;
 import conexao.ConexaoSQL;
 import controle.CtrlExtrato;
 import controle.CtrlLoja;
-import controle.CtrlProduto;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -30,7 +29,6 @@ import model.Produto;
  * @author krist
  */
 public class MetodosABC extends UnicastRemoteObject implements InterfaceABC {
-    CtrlProduto ctrlProduto = new CtrlProduto();
     CtrlLoja ctrlLoja = new CtrlLoja();
     CtrlExtrato ctrlExtrato = new CtrlExtrato();
     ConexaoSQL conexaoSQL = new ConexaoSQL();
@@ -64,7 +62,7 @@ public class MetodosABC extends UnicastRemoteObject implements InterfaceABC {
     }
 
     @Override
-    public boolean comprar(Produto produto) throws RemoteException {
+    public boolean comprar(Produto produto, double quantidade) throws RemoteException {
         Extrato extrato = new Extrato();
         double taxa = 0.12;
         boolean r = false;
@@ -76,7 +74,7 @@ public class MetodosABC extends UnicastRemoteObject implements InterfaceABC {
                 extrato.setPrice(produto.getPrice()*taxa);
                 Registry miRegistry = LocateRegistry.getRegistry(l.getIp(),l.getPorta());
                 InterfaceABC stub = (InterfaceABC) miRegistry.lookup(l.getMi());
-                r = stub.comprar(produto);
+                r = stub.comprar(produto,quantidade);
                 ctrlExtrato.inserir(extrato, conexaoSQL);
              }
          }

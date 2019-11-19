@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface InterfaceABC extends Remote{
     public List<Produto> buscar(String nome) throws RemoteException;
-    public boolean comprar(Produto produto) throws RemoteException;
+    public boolean comprar(Produto produto, double quantidade) throws RemoteException;
     public List<Extrato> extrato() throws RemoteException;
 }

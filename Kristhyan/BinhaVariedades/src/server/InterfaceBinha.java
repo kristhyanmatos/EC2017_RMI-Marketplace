@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ABCsrc;
+package server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,8 +15,8 @@ import model.Produto;
  *
  * @author krist
  */
-public interface InterfaceABC extends Remote{
+public interface InterfaceBinha extends Remote{
     public List<Produto> buscar(String nome) throws RemoteException;
-    public boolean comprar(Produto produto, double quantidade) throws RemoteException;
+    public boolean comprar(Produto produto, double quanitdade) throws RemoteException;
     public List<Extrato> extrato() throws RemoteException;
 }

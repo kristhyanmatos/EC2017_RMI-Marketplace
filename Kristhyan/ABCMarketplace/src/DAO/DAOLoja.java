@@ -33,14 +33,14 @@ public class DAOLoja {
             return pstmt.executeUpdate();
             
         } catch (SQLException ex) {
-            Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOLoja.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }finally{
             if(pstmt!=null){
                 try{
                     pstmt.close();
                 }catch(SQLException e){
-                    java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
+                    java.util.logging.Logger.getLogger(DAOLoja.class.getName()).log(Level.SEVERE, null, e);
                 }
             }
         }
@@ -68,14 +68,14 @@ public class DAOLoja {
                 lojas.add(l);
             }
         }catch(SQLException e){
-            java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
+            java.util.logging.Logger.getLogger(DAOLoja.class.getName()).log(Level.SEVERE, null, e);
             return null;
         }finally{
             try{
                 resultSet.close();
                 stmt.close();
             }catch(SQLException e){
-                java.util.logging.Logger.getLogger(DAOProduto.class.getName()).log(Level.SEVERE, null, e);
+                java.util.logging.Logger.getLogger(DAOLoja.class.getName()).log(Level.SEVERE, null, e);
             }
         }
         return lojas;
