@@ -180,7 +180,9 @@ public class ClientRMI extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
+        TabelaEncontrados.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         TabelaEncontrados.setModel(tabela);
+        TabelaEncontrados.setSelectionBackground(new java.awt.Color(153, 0, 0));
         TabelaEncontrados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TabelaEncontradosMouseClicked(evt);
