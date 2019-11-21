@@ -72,6 +72,7 @@ public class MetodosABC extends UnicastRemoteObject implements InterfaceABC {
                 extrato.setNome(produto.getNome());
                 extrato.setData(dataAtual);
                 extrato.setPrice(produto.getPrice()*taxa);
+                produto.setPrice(produto.getPrice()-(extrato.getPrice()));
                 Registry miRegistry = LocateRegistry.getRegistry(l.getIp(),l.getPorta());
                 InterfaceABC stub = (InterfaceABC) miRegistry.lookup(l.getMi());
                 r = stub.comprar(produto,quantidade);

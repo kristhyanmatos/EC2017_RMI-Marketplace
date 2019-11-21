@@ -12,33 +12,51 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.table.TableModel;
-import model.TabelaResultado;
+import model.Produto;
+import depedencias.TabelaResultado;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author krist
  */
 public class ClientRMI extends javax.swing.JFrame {
+    List<Produto> produtos = new ArrayList<>();
     TableModel tabela;
     TabelaResultado tabelaResultados;
+    Registry miRegistry;
+    InterfaceABC stub;
+    Produto pSelecionado;
     /**
      * Creates new form ClientRMI
      */
     public ClientRMI() {
-        tabelaResultados = new TabelaResultado(null);
-        tabela = tabelaResultados;
-        initComponents();
+        
         System.setProperty("java.security.policy", "security.txt");
             System.setSecurityManager(new SecurityManager());
             
-            Registry miRegistry;
         try {
-            miRegistry = LocateRegistry.getRegistry("127.0.0.1", 1234);
-            InterfaceABC stub =  (InterfaceABC) miRegistry.lookup("marketplaceABC");
-        } catch (RemoteException | NotBoundException ex) {
-            Logger.getLogger(ClientRMI.class.getName()).log(Level.SEVERE, null, ex);
+                miRegistry = LocateRegistry.getRegistry("127.0.0.1", 1234);
+                stub =  (InterfaceABC) miRegistry.lookup("marketplaceABC");
+                
+            } catch (RemoteException | NotBoundException ex) {
+                Logger.getLogger(ClientRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        tabelaResultados = new TabelaResultado(produtos);
+        tabela = tabelaResultados;
+        
+        initComponents();
+            comprar.setVisible(false);
+            
+            jSeparator1.setVisible(false);
+            lunidades.setVisible(false);
+            unidades.setVisible(false);
+            PainelEncontrados.setVisible(false);
+            jScrollPaneEncontrados.setVisible(false);
             
             
     }
@@ -70,6 +88,7 @@ public class ClientRMI extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 51, 0));
         jPanel1.setForeground(new java.awt.Color(255, 51, 0));
@@ -79,10 +98,17 @@ public class ClientRMI extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ABC");
 
+        pesquisa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+
         buscar.setBackground(new java.awt.Color(255, 51, 0));
         buscar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         buscar.setForeground(new java.awt.Color(204, 51, 0));
         buscar.setText("Buscar");
+        buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -121,6 +147,11 @@ public class ClientRMI extends javax.swing.JFrame {
 
         extrato.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         extrato.setText("Extrato");
+        extrato.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                extratoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -150,11 +181,16 @@ public class ClientRMI extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         TabelaEncontrados.setModel(tabela);
+        TabelaEncontrados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabelaEncontradosMouseClicked(evt);
+            }
+        });
         jScrollPaneEncontrados.setViewportView(TabelaEncontrados);
 
         PainelEncontrados.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Resultados encontrados");
 
@@ -176,10 +212,15 @@ public class ClientRMI extends javax.swing.JFrame {
         );
 
         comprar.setBackground(new java.awt.Color(204, 0, 0));
+        comprar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         comprar.setForeground(new java.awt.Color(204, 0, 0));
         comprar.setText("COMPRAR");
+        comprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comprarActionPerformed(evt);
+            }
+        });
 
-        unidades.setForeground(new java.awt.Color(255, 204, 204));
         unidades.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         unidades.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -242,7 +283,7 @@ public class ClientRMI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -250,11 +291,63 @@ public class ClientRMI extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void unidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unidadesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_unidadesActionPerformed
+
+    private void TabelaEncontradosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelaEncontradosMouseClicked
+        if(TabelaEncontrados.getSelectedRow()>=-1){
+            comprar.setVisible(true);
+            jSeparator1.setVisible(true);
+            lunidades.setVisible(true);
+            unidades.setVisible(true);
+            pSelecionado = (Produto) tabelaResultados.getSelecionado(TabelaEncontrados.getSelectedRow());
+            
+        }
+    }//GEN-LAST:event_TabelaEncontradosMouseClicked
+
+    private void buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarActionPerformed
+        jScrollPaneEncontrados.setVisible(true);
+        PainelEncontrados.setVisible(true);
+            
+        TabelaEncontrados.removeAll();
+        try {
+        tabelaResultados.AtulizarTabela(stub.buscar(pesquisa.getText()));
+        } catch (RemoteException ex) {
+            Logger.getLogger(ClientRMI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tabela = tabelaResultados;
+    }//GEN-LAST:event_buscarActionPerformed
+
+    private void comprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comprarActionPerformed
+        if(unidades.getText().equals(""))
+            JOptionPane.showMessageDialog(this, "Por favor, insira uma quantidade!");
+        else{
+            
+            if((pSelecionado.getUnidades()-Double.parseDouble(unidades.getText())<0))
+                JOptionPane.showMessageDialog(this, "Infelizmente, não temos essa quantidade em estoque! :(");
+            else{
+                try {
+                    pSelecionado.setPrice(pSelecionado.getPrice()*Double.parseDouble(unidades.getText()));
+                    stub.comprar(pSelecionado,(pSelecionado.getUnidades()-Double.parseDouble(unidades.getText())));
+                    JOptionPane.showMessageDialog(this, "Produto comprado!");
+                    tabelaResultados.AtulizarTabela(stub.buscar(pesquisa.getText()));
+                } catch (RemoteException ex) {
+                    Logger.getLogger(ClientRMI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                    tabela = tabelaResultados;
+            }
+            
+        }
+    }//GEN-LAST:event_comprarActionPerformed
+
+    private void extratoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extratoActionPerformed
+        ExtratoRMI ex = new ExtratoRMI();
+        ex.setVisible(true);
+    }//GEN-LAST:event_extratoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -267,7 +360,7 @@ public class ClientRMI extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

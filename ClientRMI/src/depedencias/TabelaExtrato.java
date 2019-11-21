@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package depedencias;
 
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import model.Produto;
+import model.Extrato;
 
 /**
  *
- * @author kristhyanmatos
+ * @author krist
  */
-public class TabelaResultado extends AbstractTableModel {
-    List<Produto> lista;
-    private String[] colunas = {"Nome","Preco","Loja"};
+public class TabelaExtrato extends AbstractTableModel{
+    List<Extrato> lista;
+    private String[] colunas = {"Nome","Data","Preço"};
     
     
-    public TabelaResultado (List<Produto> l){
+    public TabelaExtrato(List<Extrato> l){
         this.lista = l;
     }
 
@@ -41,16 +41,17 @@ public class TabelaResultado extends AbstractTableModel {
     }
     @Override
     public void setValueAt(Object avalue, int rowIndex, int ColumnIndex ){
-        Produto p = lista.get(rowIndex);
+        Extrato e = lista.get(rowIndex);
         switch(ColumnIndex){
             case 0:
-                p.setNome(avalue.toString());
+                e.setNome(avalue.toString());
                 break;
             case 1:
-                p.setPrice(Double.parseDouble(avalue.toString()));
+                e.setData(avalue.toString());
                 break;
             case 2:
-                p.setLoja(avalue.toString());
+                e.setPrice(Double.parseDouble(avalue.toString()));
+                break;
             default:
                 System.err.println("Indice de coluna invalido");
                 break;
@@ -59,17 +60,17 @@ public class TabelaResultado extends AbstractTableModel {
     }
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-       Produto Selecionada = lista.get(rowIndex);
+       Extrato Selecionada = lista.get(rowIndex);
        Object objeto = null;
        switch(columnIndex){
            case 0:
                objeto = Selecionada.getNome();
                break;
            case 1:
-               objeto = Selecionada.getPrice();
+               objeto = Selecionada.getData();
                break;
            case 2:
-               objeto = Selecionada.getLoja();
+               objeto = Selecionada.getPrice();
                break;
            default:
                break;
@@ -85,7 +86,7 @@ public class TabelaResultado extends AbstractTableModel {
         return lista.get(rowIndex);
     }
     
-    public void AtulizarTabela(List<Produto> novaLista){
+    public void AtulizarTabela(List<Extrato> novaLista){
         this.lista = novaLista;
         fireTableDataChanged();
     }
