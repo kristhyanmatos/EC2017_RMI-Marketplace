@@ -5,17 +5,42 @@
  */
 package client;
 
+import ABCsrc.InterfaceABC;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.TableModel;
+import model.TabelaResultado;
+
 /**
  *
  * @author krist
  */
 public class ClientRMI extends javax.swing.JFrame {
-
+    TableModel tabela;
+    TabelaResultado tabelaResultados;
     /**
      * Creates new form ClientRMI
      */
     public ClientRMI() {
+        tabelaResultados = new TabelaResultado(null);
+        tabela = tabelaResultados;
         initComponents();
+        System.setProperty("java.security.policy", "security.txt");
+            System.setSecurityManager(new SecurityManager());
+            
+            Registry miRegistry;
+        try {
+            miRegistry = LocateRegistry.getRegistry("127.0.0.1", 1234);
+            InterfaceABC stub =  (InterfaceABC) miRegistry.lookup("marketplaceABC");
+        } catch (RemoteException | NotBoundException ex) {
+            Logger.getLogger(ClientRMI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+            
     }
 
     /**
@@ -40,6 +65,9 @@ public class ClientRMI extends javax.swing.JFrame {
         PainelEncontrados = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         comprar = new javax.swing.JButton();
+        unidades = new javax.swing.JFormattedTextField();
+        lunidades = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,12 +75,12 @@ public class ClientRMI extends javax.swing.JFrame {
         jPanel1.setForeground(new java.awt.Color(255, 51, 0));
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("Swis721 WGL4 BT", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Swis721 WGL4 BT", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ABC");
 
         buscar.setBackground(new java.awt.Color(255, 51, 0));
-        buscar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buscar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         buscar.setForeground(new java.awt.Color(204, 51, 0));
         buscar.setText("Buscar");
 
@@ -62,8 +90,8 @@ public class ClientRMI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buscar)
@@ -121,17 +149,7 @@ public class ClientRMI extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        TabelaEncontrados.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        TabelaEncontrados.setModel(tabela);
         jScrollPaneEncontrados.setViewportView(TabelaEncontrados);
 
         PainelEncontrados.setBackground(new java.awt.Color(102, 102, 102));
@@ -161,6 +179,18 @@ public class ClientRMI extends javax.swing.JFrame {
         comprar.setForeground(new java.awt.Color(204, 0, 0));
         comprar.setText("COMPRAR");
 
+        unidades.setForeground(new java.awt.Color(255, 204, 204));
+        unidades.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        unidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unidadesActionPerformed(evt);
+            }
+        });
+
+        lunidades.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lunidades.setForeground(new java.awt.Color(153, 0, 0));
+        lunidades.setText("Unidades");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -168,25 +198,33 @@ public class ClientRMI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneEncontrados)
+                    .addComponent(jScrollPaneEncontrados, javax.swing.GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(PainelEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSeparator1)
+                            .addComponent(lunidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addComponent(unidades, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(comprar)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(PainelEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(21, Short.MAX_VALUE)
+                    .addComponent(PainelEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(comprar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(unidades, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lunidades))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPaneEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -213,6 +251,10 @@ public class ClientRMI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void unidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unidadesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_unidadesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -262,6 +304,9 @@ public class ClientRMI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPaneEncontrados;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lunidades;
     private javax.swing.JTextField pesquisa;
+    private javax.swing.JFormattedTextField unidades;
     // End of variables declaration//GEN-END:variables
 }
